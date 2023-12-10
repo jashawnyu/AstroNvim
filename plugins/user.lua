@@ -15,18 +15,56 @@ return {
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
   },
+  -- {
+  --   'vimwiki/vimwiki',
+  --   event = "BufEnter *.md",
+  --   keys = {"<leader>ww", "<leader>wt"},
+  --   enabled = true,
+  --   init = function () --replace 'config' with 'init'
+  --     vim.g.vimwiki_list = {{path = '~/Notes', syntax = 'markdown', ext = '.md'}}
+  --     vim.g.vimwiki_listsyms = " ◔◑◕✓"
+  --     -- vim.api.nvim_set_keymap('n', '<C-]>', '<Plug>VimwikiNextLink', {silent=true})
+  --     -- vim.api.nvim_set_keymap('n', '<C-[>', '<Plug>VimwikiPrevLink', {silent=true})
+  --     --vim.api.nvim_set_keymap('n', '<S-Tab>', '<Plug>VimwikiDecreaseLvlWholeItem', {silent=true})
+  --     --vim.api.nvim_set_keymap('n', '<Tab>', '<Plug>VimwikiIncreaseLvlWholeItem', {silent=true})
+  --   end,
+  -- },
   {
-    'vimwiki/vimwiki',
-    event = "BufEnter *.md",
-    keys = {"<leader>ww", "<leader>wt"},
+    "nvim-neorg/neorg",
+    -- lazy-load on filetype
+    ft = "norg", -- can run :Neorg index command at anytime
+    -- options for neorg. This will automatically call `require("neorg").setup(opts)`
     enabled = true,
-    init = function () --replace 'config' with 'init'
-      vim.g.vimwiki_list = {{path = '~/Notes', syntax = 'markdown', ext = '.md'}}
-      vim.g.vimwiki_listsyms = " ◔◑◕✓"
-      -- vim.api.nvim_set_keymap('n', '<C-]>', '<Plug>VimwikiNextLink', {silent=true})
-      -- vim.api.nvim_set_keymap('n', '<C-[>', '<Plug>VimwikiPrevLink', {silent=true})
-      --vim.api.nvim_set_keymap('n', '<S-Tab>', '<Plug>VimwikiDecreaseLvlWholeItem', {silent=true})
-      --vim.api.nvim_set_keymap('n', '<Tab>', '<Plug>VimwikiIncreaseLvlWholeItem', {silent=true})
-    end,
+    opts = {
+      load = {
+        ["core.defaults"] = {},
+        ["core.concealer"] = {},
+        ["core.export"] = {},
+        ["core.summary"] = {
+          config = {
+            strategy = "default",
+          }
+        },
+        ["core.completion"] = {
+          config = {
+            engine = "nvim-cmp",
+          },
+        },
+        ["core.manoeuvre"] = {}, --moving around different elements up and down
+        ["core.dirman"] = {
+          config = {
+            workspaces = {
+              work = "~/Notes",
+            }
+          }
+        },
+        ["core.keybinds"] = {
+          config = {
+            default_keybinds = true,
+            --neorg_leader = "<LocalLeader>", -- default neorg mapleader is ","
+          }
+        }, 
+      },
+    },
   },
 }
