@@ -31,10 +31,12 @@ return {
   -- },
   {
     "nvim-neorg/neorg",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    -- event = "VeryLazy",
     -- lazy-load on filetype
     ft = "norg", -- can run :Neorg index command at anytime
     -- options for neorg. This will automatically call `require("neorg").setup(opts)`
-    enabled = true,
     opts = {
       load = {
         ["core.defaults"] = {},
@@ -43,7 +45,7 @@ return {
         ["core.summary"] = {
           config = {
             strategy = "default",
-          }
+          },
         },
         ["core.completion"] = {
           config = {
@@ -55,15 +57,16 @@ return {
           config = {
             workspaces = {
               work = "~/Notes",
-            }
-          }
+            },
+            index = "index.norg", -- The name of the main (root) .norg file
+          },
         },
         ["core.keybinds"] = {
           config = {
             default_keybinds = true,
             --neorg_leader = "<LocalLeader>", -- default neorg mapleader is ","
-          }
-        }, 
+          },
+        },
       },
     },
   },
