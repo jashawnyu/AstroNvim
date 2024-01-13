@@ -15,59 +15,59 @@ return {
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
   },
-  -- {
-  --   'vimwiki/vimwiki',
-  --   event = "BufEnter *.md",
-  --   keys = {"<leader>ww", "<leader>wt"},
-  --   enabled = true,
-  --   init = function () --replace 'config' with 'init'
-  --     vim.g.vimwiki_list = {{path = '~/Notes', syntax = 'markdown', ext = '.md'}}
-  --     vim.g.vimwiki_listsyms = " ◔◑◕✓"
-  --     -- vim.api.nvim_set_keymap('n', '<C-]>', '<Plug>VimwikiNextLink', {silent=true})
-  --     -- vim.api.nvim_set_keymap('n', '<C-[>', '<Plug>VimwikiPrevLink', {silent=true})
-  --     --vim.api.nvim_set_keymap('n', '<S-Tab>', '<Plug>VimwikiDecreaseLvlWholeItem', {silent=true})
-  --     --vim.api.nvim_set_keymap('n', '<Tab>', '<Plug>VimwikiIncreaseLvlWholeItem', {silent=true})
-  --   end,
-  -- },
   {
-    "nvim-neorg/neorg",
-    build = ":Neorg sync-parsers",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    -- event = "VeryLazy",
-    -- lazy-load on filetype
-    ft = "norg", -- can run :Neorg index command at anytime
-    -- options for neorg. This will automatically call `require("neorg").setup(opts)`
-    opts = {
-      load = {
-        ["core.defaults"] = {},
-        ["core.concealer"] = {},
-        ["core.export"] = {},
-        ["core.summary"] = {
-          config = {
-            strategy = "default",
-          },
-        },
-        ["core.completion"] = {
-          config = {
-            engine = "nvim-cmp",
-          },
-        },
-        ["core.manoeuvre"] = {}, --moving around different elements up and down
-        ["core.dirman"] = {
-          config = {
-            workspaces = {
-              work = "~/Notes",
-            },
-            index = "index.norg", -- The name of the main (root) .norg file
-          },
-        },
-        ["core.keybinds"] = {
-          config = {
-            default_keybinds = true,
-            --neorg_leader = "<LocalLeader>", -- default neorg mapleader is ","
-          },
-        },
+    "epwalsh/obsidian.nvim",
+    -- the obsidian vault in this default config  ~/obsidian-vault
+    -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand':
+    -- event = { "bufreadpre " .. vim.fn.expand "~" .. "/my-vault/**.md" },
+    event = { "BufReadPre  */obsidian-vault/*.md" },
+    keys = {
+      {
+        "gf",
+        function()
+          if require("obsidian").util.cursor_on_markdown_link() then
+            return "<cmd>ObsidianFollowLink<CR>"
+          else
+            return "gf"
+          end
+        end,
+        noremap = false,
+        expr = true,
       },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+      "nvim-telescope/telescope.nvim",
+    },
+    opts = {
+      dir = vim.env.HOME .. "/obsidian-vault", -- specify the vault location. no need to call 'vim.fn.expand' here
+      use_advanced_uri = true,
+      finder = "telescope.nvim",
+      mappings = {},
+
+      templates = {
+        subdir = "templates",
+        date_format = "%Y-%m-%d-%a",
+        time_format = "%H:%M",
+      },
+
+      note_frontmatter_func = function(note)
+        -- This is equivalent to the default frontmatter function.
+        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+        -- `note.metadata` contains any manually added fields in the frontmatter.
+        -- So here we just make sure those fields are kept in the frontmatter.
+        if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
+          for k, v in pairs(note.metadata) do
+            out[k] = v
+          end
+        end
+        return out
+      end,
+
+      -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
+      -- URL it will be ignored but you can customize this behavior here.
+      follow_url_func = vim.ui.open or require("astronvim.utils").system_open,
     },
   },
 }
