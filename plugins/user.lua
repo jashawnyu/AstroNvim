@@ -19,8 +19,8 @@ return {
     "epwalsh/obsidian.nvim",
     -- the obsidian vault in this default config  ~/obsidian-vault
     -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand':
-    -- event = { "bufreadpre " .. vim.fn.expand "~" .. "/my-vault/**.md" },
-    event = { "BufReadPre  */obsidian-vault/*.md" },
+    event = { "bufreadpre " .. vim.fn.expand "~" .. "/Notes/**.md" },
+    -- event = { "BufReadPre  */obsidian-vault/*.md" },
     keys = {
       {
         "gf",
@@ -41,7 +41,7 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     opts = {
-      dir = vim.env.HOME .. "/obsidian-vault", -- specify the vault location. no need to call 'vim.fn.expand' here
+      dir = vim.env.HOME .. "/Notes", -- specify the vault location. no need to call 'vim.fn.expand' here
       use_advanced_uri = true,
       finder = "telescope.nvim",
       mappings = {},

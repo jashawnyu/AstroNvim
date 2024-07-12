@@ -37,6 +37,7 @@ return {
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
           -- "python",
+          "c",
         },
       },
       disabled = { -- disable formatting capabilities for the listed language servers
